@@ -33,32 +33,32 @@ module cl_command_queue_m
     clFinish,                        &
     clFlush
   
-  ! The following functions are not declared since they are
-  ! polymorphic beyond the capabilities of Fortran. They can be
-  ! called, but no type checking will be done by the compiler.
-  
-  !  interface
-  !    subroutine clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
-  !      type(cl_command_queue), intent(inout) :: command_queue
-  !      type(cl_mem),           intent(inout) :: buffer
-  !      integer,                intent(in)    :: blocking_write
-  !      integer(8),             intent(in)    :: offset
-  !      integer(8),             intent(in)    :: cb
-  !      type(any),              intent(inout) :: ptr
-  !      integer,                intent(out)   :: errcode_ret
-  !    end subroutine clEnqueueWriteBufferImpl
-  
-  !    subroutine clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
-  !      type(cl_command_queue), intent(inout) :: command_queue
-  !      type(cl_mem),           intent(inout) :: buffer
-  !      integer,                intent(in)    :: blocking_write
-  !      integer(8),             intent(in)    :: offset
-  !      integer(8),             intent(in)    :: cb
-  !      type(any),              intent(inout) :: ptr
-  !      integer,                intent(out)   :: errcode_ret
-  !    end subroutine clEnqueueReadBufferImpl
-  
-  !  end interface
+  interface
+    subroutine clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+      use iso_c_binding, only: c_ptr
+      use cl_types_m
+      type(cl_command_queue), intent(inout) :: command_queue
+      type(cl_mem),           intent(inout) :: buffer
+      integer,                intent(in)    :: blocking_write
+      integer(8),             intent(in)    :: offset
+      integer(8),             intent(in)    :: cb
+      type(c_ptr), value,     intent(in)    :: ptr
+      integer,                intent(out)   :: errcode_ret
+    end subroutine clEnqueueWriteBufferImpl
+
+    subroutine clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+      use iso_c_binding, only: c_ptr
+      use cl_types_m
+      type(cl_command_queue), intent(inout) :: command_queue
+      type(cl_mem),           intent(in)    :: buffer
+      integer,                intent(in)    :: blocking_write
+      integer(8),             intent(in)    :: offset
+      integer(8),             intent(in)    :: cb
+      type(c_ptr), value,     intent(in)    :: ptr
+      integer,                intent(out)   :: errcode_ret
+    end subroutine clEnqueueReadBufferImpl
+
+  end interface
 
   ! ----------------------------------------------------
 
@@ -244,210 +244,224 @@ contains
   ! ---------------------------------------
 
   subroutine clEnqueueWriteBuffer_integer4(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(inout) :: buffer
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    integer(4),             intent(in)    :: ptr
+    integer(4), target,     intent(in)    :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueWriteBuffer_integer4
 
   ! ---------------------------------------
 
   subroutine clEnqueueWriteBuffer_integer8(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(inout) :: buffer
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    integer(8),             intent(in)    :: ptr
+    integer(8), target,     intent(in)    :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueWriteBuffer_integer8
 
   ! ---------------------------------------
 
   subroutine clEnqueueWriteBuffer_real4(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(inout) :: buffer
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    real(4),                intent(in)    :: ptr
+    real(4), target,        intent(in)    :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueWriteBuffer_real4
 
   ! ---------------------------------------
 
   subroutine clEnqueueWriteBuffer_real8(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(inout) :: buffer
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    real(8),                intent(in)    :: ptr
+    real(8),    target,     intent(in)    :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueWriteBuffer_real8
 
   ! ---------------------------------------
 
   subroutine clEnqueueWriteBuffer_complex4(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(inout) :: buffer
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    complex(4),             intent(in)    :: ptr
+    complex(4), target,     intent(in)    :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueWriteBuffer_complex4
 
   ! ---------------------------------------
 
   subroutine clEnqueueWriteBuffer_complex8(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(inout) :: buffer
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    complex(8),             intent(in)    :: ptr
+    complex(8), target,     intent(in)    :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueWriteBuffer_complex8
 
   ! ---------------------------------------
 
   subroutine clEnqueueWriteBuffer_character(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(inout) :: buffer
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    character,              intent(in)    :: ptr
+    character, target,      intent(in)    :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueWriteBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueWriteBuffer_character
 
   ! ---------------------------------------
 
   subroutine clEnqueueReadBuffer_integer4(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(in)    :: buffer 
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    integer(4),             intent(out)   :: ptr
+    integer(4), target,     intent(out)   :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueReadBuffer_integer4
 
   ! ---------------------------------------
 
   subroutine clEnqueueReadBuffer_integer8(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(in)    :: buffer 
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    integer(8),             intent(out)   :: ptr
+    integer(8), target,     intent(out)   :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueReadBuffer_integer8
 
   ! ---------------------------------------
 
   subroutine clEnqueueReadBuffer_real4(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(in)    :: buffer 
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    real(4),                intent(out)   :: ptr
+    real(4), target,        intent(out)   :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueReadBuffer_real4
 
   ! ---------------------------------------
 
   subroutine clEnqueueReadBuffer_real8(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(in)    :: buffer 
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    real(8),                intent(out)   :: ptr
+    real(8), target,        intent(out)   :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueReadBuffer_real8
 
   ! ---------------------------------------
 
   subroutine clEnqueueReadBuffer_complex4(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(in)    :: buffer
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    complex(4),             intent(out)   :: ptr
+    complex(4), target,     intent(out)   :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueReadBuffer_complex4
 
   ! ---------------------------------------
 
   subroutine clEnqueueReadBuffer_complex8(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(in)    :: buffer
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    complex(8),             intent(out)   :: ptr
+    complex(8), target,     intent(out)   :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueReadBuffer_complex8
 
   ! ---------------------------------------
 
   subroutine clEnqueueReadBuffer_character(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    use iso_c_binding, only: c_loc
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(in)    :: buffer
     integer,                intent(in)    :: blocking_write
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
-    character,              intent(out)   :: ptr
+    character, target,      intent(out)   :: ptr
     integer,                intent(out)   :: errcode_ret
     
-    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, ptr, errcode_ret)
+    call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueReadBuffer_character
 
