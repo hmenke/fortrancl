@@ -52,6 +52,11 @@ program sum
   cl_vec1 = clCreateBuffer(context, CL_MEM_READ_ONLY, size_in_bytes, ierr)
   cl_vec2 = clCreateBuffer(context, CL_MEM_READ_WRITE, size_in_bytes, ierr)
 
+ call clEnqueueFillBuffer(command_queue, cl_vec1, 0.0, 0_8, size_in_bytes, ierr)
+ if(ierr /= CL_SUCCESS) call error_exit('Error in clEnqueueFillBuffer.', ierr)
+ call clEnqueueFillBuffer(command_queue, cl_vec2, 0.0, 0_8, size_in_bytes, ierr)
+ if(ierr /= CL_SUCCESS) call error_exit('Error in clEnqueueFillBuffer.', ierr)
+
   ! copy data to device memory
   call clEnqueueWriteBuffer(command_queue, cl_vec1, cl_bool(.true.), 0_8, size_in_bytes, vec1(1), ierr)
   if(ierr /= CL_SUCCESS) call error_exit('Error in clEnqueueWriteBuffer.', ierr)

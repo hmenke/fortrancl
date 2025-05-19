@@ -30,6 +30,7 @@ module cl_command_queue_m
     clEnqueueNDRangeKernel,          &
     clEnqueueWriteBuffer,            &
     clEnqueueReadBuffer,             &
+    clEnqueueFillBuffer,             &
     clFinish,                        &
     clFlush
   
@@ -57,6 +58,18 @@ module cl_command_queue_m
       type(c_ptr), value,     intent(in)    :: ptr
       integer,                intent(out)   :: errcode_ret
     end subroutine clEnqueueReadBufferImpl
+
+    subroutine clEnqueueFillBufferImpl(command_queue, buffer, pattern, pattern_size, offset, cb, errcode_ret)
+      use iso_c_binding, only: c_ptr
+      use cl_types_m
+      type(cl_command_queue), intent(inout) :: command_queue
+      type(cl_mem),           intent(in)    :: buffer
+      type(c_ptr), value,     intent(in)    :: pattern
+      integer(8),             intent(in)    :: pattern_size
+      integer(8),             intent(in)    :: offset
+      integer(8),             intent(in)    :: cb
+      integer,                intent(out)   :: errcode_ret
+    end subroutine clEnqueueFillBufferImpl
 
   end interface
 
@@ -157,7 +170,19 @@ module cl_command_queue_m
     module procedure clEnqueueReadBuffer_complex8
     module procedure clEnqueueReadBuffer_character
   end interface clEnqueueReadBuffer
-  
+
+  ! ---------------------------------------------------
+
+  interface clEnqueueFillBuffer
+    module procedure clEnqueueFillBuffer_integer4
+    module procedure clEnqueueFillBuffer_integer8
+    module procedure clEnqueueFillBuffer_real4
+    module procedure clEnqueueFillBuffer_real8
+    module procedure clEnqueueFillBuffer_complex4
+    module procedure clEnqueueFillBuffer_complex8
+    module procedure clEnqueueFillBuffer_character
+  end interface clEnqueueFillBuffer
+
   interface
     subroutine clEnqueueNDRangeKernel_low(command_queue, kernel, work_dim, globalsizes, localsizes, event, errcode_ret)
       use cl_types_m
@@ -464,6 +489,111 @@ contains
     call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueReadBuffer_character
+
+  ! ---------------------------------------
+
+  subroutine clEnqueueFillBuffer_integer4(command_queue, buffer, ptr, offset, cb, errcode_ret)
+    use iso_c_binding, only: c_loc, c_sizeof
+    type(cl_command_queue), intent(inout) :: command_queue
+    type(cl_mem),           intent(in)    :: buffer
+    integer(4), target,     intent(out)   :: ptr
+    integer(8),             intent(in)    :: offset
+    integer(8),             intent(in)    :: cb
+    integer,                intent(out)   :: errcode_ret
+
+    call clEnqueueFillBufferImpl(command_queue, buffer, c_loc(ptr), c_sizeof(ptr), offset, cb, errcode_ret)
+
+  end subroutine clEnqueueFillBuffer_integer4
+
+  ! ---------------------------------------
+
+  subroutine clEnqueueFillBuffer_integer8(command_queue, buffer, ptr, offset, cb, errcode_ret)
+    use iso_c_binding, only: c_loc, c_sizeof
+    type(cl_command_queue), intent(inout) :: command_queue
+    type(cl_mem),           intent(in)    :: buffer
+    integer(8), target,     intent(in)    :: ptr
+    integer(8),             intent(in)    :: offset
+    integer(8),             intent(in)    :: cb
+    integer,                intent(out)   :: errcode_ret
+
+    call clEnqueueFillBufferImpl(command_queue, buffer, c_loc(ptr), c_sizeof(ptr), offset, cb, errcode_ret)
+
+  end subroutine clEnqueueFillBuffer_integer8
+
+  ! ---------------------------------------
+
+  subroutine clEnqueueFillBuffer_real4(command_queue, buffer, ptr, offset, cb, errcode_ret)
+    use iso_c_binding, only: c_loc, c_sizeof
+    type(cl_command_queue), intent(inout) :: command_queue
+    type(cl_mem),           intent(in)    :: buffer
+    real(4), target,        intent(in)    :: ptr
+    integer(8),             intent(in)    :: offset
+    integer(8),             intent(in)    :: cb
+    integer,                intent(out)   :: errcode_ret
+
+    call clEnqueueFillBufferImpl(command_queue, buffer, c_loc(ptr), c_sizeof(ptr), offset, cb, errcode_ret)
+
+  end subroutine clEnqueueFillBuffer_real4
+
+  ! ---------------------------------------
+
+  subroutine clEnqueueFillBuffer_real8(command_queue, buffer, ptr, offset, cb, errcode_ret)
+    use iso_c_binding, only: c_loc, c_sizeof
+    type(cl_command_queue), intent(inout) :: command_queue
+    type(cl_mem),           intent(in)    :: buffer
+    real(8), target,        intent(in)    :: ptr
+    integer(8),             intent(in)    :: offset
+    integer(8),             intent(in)    :: cb
+    integer,                intent(out)   :: errcode_ret
+
+    call clEnqueueFillBufferImpl(command_queue, buffer, c_loc(ptr), c_sizeof(ptr), offset, cb, errcode_ret)
+
+  end subroutine clEnqueueFillBuffer_real8
+
+  ! ---------------------------------------
+
+  subroutine clEnqueueFillBuffer_complex4(command_queue, buffer, ptr, offset, cb, errcode_ret)
+    use iso_c_binding, only: c_loc, c_sizeof
+    type(cl_command_queue), intent(inout) :: command_queue
+    type(cl_mem),           intent(in)    :: buffer
+    complex(4), target,     intent(in)    :: ptr
+    integer(8),             intent(in)    :: offset
+    integer(8),             intent(in)    :: cb
+    integer,                intent(out)   :: errcode_ret
+
+    call clEnqueueFillBufferImpl(command_queue, buffer, c_loc(ptr), c_sizeof(ptr), offset, cb, errcode_ret)
+
+  end subroutine clEnqueueFillBuffer_complex4
+
+  ! ---------------------------------------
+
+  subroutine clEnqueueFillBuffer_complex8(command_queue, buffer, ptr, offset, cb, errcode_ret)
+    use iso_c_binding, only: c_loc, c_sizeof
+    type(cl_command_queue), intent(inout) :: command_queue
+    type(cl_mem),           intent(in)    :: buffer
+    complex(8), target,     intent(in)    :: ptr
+    integer(8),             intent(in)    :: offset
+    integer(8),             intent(in)    :: cb
+    integer,                intent(out)   :: errcode_ret
+
+    call clEnqueueFillBufferImpl(command_queue, buffer, c_loc(ptr), c_sizeof(ptr), offset, cb, errcode_ret)
+
+  end subroutine clEnqueueFillBuffer_complex8
+
+  ! ---------------------------------------
+
+  subroutine clEnqueueFillBuffer_character(command_queue, buffer, ptr, offset, cb, errcode_ret)
+    use iso_c_binding, only: c_loc, c_sizeof
+    type(cl_command_queue), intent(inout) :: command_queue
+    type(cl_mem),           intent(in)    :: buffer
+    character, target,      intent(in)    :: ptr
+    integer(8),             intent(in)    :: offset
+    integer(8),             intent(in)    :: cb
+    integer,                intent(out)   :: errcode_ret
+
+    call clEnqueueFillBufferImpl(command_queue, buffer, c_loc(ptr), c_sizeof(ptr), offset, cb, errcode_ret)
+
+  end subroutine clEnqueueFillBuffer_character
 
   ! ---------------------------------------
 

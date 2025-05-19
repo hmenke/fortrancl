@@ -45,6 +45,9 @@ program char
   cl_string = clCreateBuffer(context, CL_MEM_READ_ONLY, size_in_bytes, ierr)
   if(ierr /= CL_SUCCESS) call error_exit('Error in clCreateBuffer.', ierr)
 
+  call clEnqueueFillBuffer(command_queue, cl_string, ' ', 0_8, size_in_bytes, ierr)
+  if(ierr /= CL_SUCCESS) call error_exit('Error in clEnqueueWriteBuffer.', ierr)
+
   string1 = 'Pepper clemens sent the messenger nevertheless the reverend left the herd'
   print*, trim(string1)
 

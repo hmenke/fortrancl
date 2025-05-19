@@ -103,3 +103,11 @@ void FC_FUNC(clenqueuereadbufferimpl, CLENQUEUEREADBUFFERIMPL)
 				      (size_t) *offset, (size_t) *cb, ptr, 0, NULL, NULL);
 }
 
+/* -----------------------------------------------------------------------*/
+
+void FC_FUNC(clenqueuefillbufferimpl, CLENQUEUEFILLBUFFERIMPL)
+     (cl_command_queue * command_queue, cl_mem * buffer, const void * pattern, const cl_long * pattern_size,
+      const cl_long * offset, const cl_long * cb, int * status){
+    *status = (int) clEnqueueFillBuffer(*command_queue, *buffer, pattern, (size_t) *pattern_size,
+                                        (size_t) *offset, (size_t) *cb, 0, NULL, NULL);
+}
