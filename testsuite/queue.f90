@@ -27,11 +27,15 @@ program queue
   type(cl_context)       :: context
   type(cl_command_queue) :: command_queue
   type(cl_kernel)        :: kernel
-  type(cl_event)         :: event(1), events(1:2)
+  type(cl_event)         :: event, events(1:2)
   integer    :: size, ierr
   integer(8) :: size_in_bytes, globalsize, localsize
   type(cl_mem)        :: cl_string
   integer, parameter  :: string_length = 1024
+
+  event = transfer(1337_8, event)
+  events(1) = transfer(1729_8, events(1))
+  events(2) = transfer(2137_8, events(2))
 
   call initialize(device, context, command_queue)
 
@@ -52,7 +56,7 @@ program queue
   globalsize = 1024_8*localsize
 
   ! execute the kernel
-  call clEnqueueNDRangeKernel(command_queue, kernel, (/globalsize/), (/localsize/), event(1), ierr)
+  call clEnqueueNDRangeKernel(command_queue, kernel, (/globalsize/), (/localsize/), event, ierr)
   if(ierr /= CL_SUCCESS) call error_exit('Error in clEnqueueNDRangeKernel.', ierr)
 
   call clFinish(command_queue, ierr)
@@ -61,9 +65,9 @@ program queue
   call clWaitForEvents(event, ierr)
   if(ierr /= CL_SUCCESS) call error_exit('Error in clWaitForEvents.', ierr)
 
-  call clRetainEvent(event(1), ierr)
+  call clRetainEvent(event, ierr)
   if(ierr /= CL_SUCCESS) call error_exit('Error in clRetainEvent.', ierr)
-  call clReleaseEvent(event(1), ierr)
+  call clReleaseEvent(event, ierr)
   if(ierr /= CL_SUCCESS) call error_exit('Error in clReleaseEvent.', ierr)
 
   ! execute the kernel
