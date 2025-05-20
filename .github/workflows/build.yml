@@ -13,7 +13,7 @@ jobs:
       matrix:
         include:
         - os: ubuntu-latest
-        - os: macos-12 # macos-latest is arm64 without OpenCL
+        # - os: macos-latest
 
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -52,8 +52,8 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install \
-            automake clinfo gcc@13
-          echo "FC=gfortran-13" >> $GITHUB_ENV
+            automake clinfo gcc@14 pocl
+          echo "FC=gfortran-14" >> $GITHUB_ENV
 
       - name: OpenCL platforms and devices
         run: clinfo
