@@ -498,7 +498,7 @@ contains
     use iso_c_binding, only: c_loc, c_sizeof
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(in)    :: buffer
-    integer(1), target,     intent(out)   :: ptr
+    integer(1), target,     intent(in)    :: ptr
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
     integer,                intent(out)   :: errcode_ret
@@ -513,7 +513,7 @@ contains
     use iso_c_binding, only: c_loc, c_sizeof
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(in)    :: buffer
-    integer(2), target,     intent(out)   :: ptr
+    integer(2), target,     intent(in)    :: ptr
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
     integer,                intent(out)   :: errcode_ret
@@ -528,7 +528,7 @@ contains
     use iso_c_binding, only: c_loc, c_sizeof
     type(cl_command_queue), intent(inout) :: command_queue
     type(cl_mem),           intent(in)    :: buffer
-    integer(4), target,     intent(out)   :: ptr
+    integer(4), target,     intent(in)    :: ptr
     integer(8),             intent(in)    :: offset
     integer(8),             intent(in)    :: cb
     integer,                intent(out)   :: errcode_ret
