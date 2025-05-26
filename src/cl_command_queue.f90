@@ -174,6 +174,8 @@ module cl_command_queue_m
   ! ---------------------------------------------------
 
   interface clEnqueueFillBuffer
+    module procedure clEnqueueFillBuffer_integer1
+    module procedure clEnqueueFillBuffer_integer2
     module procedure clEnqueueFillBuffer_integer4
     module procedure clEnqueueFillBuffer_integer8
     module procedure clEnqueueFillBuffer_real4
@@ -489,6 +491,36 @@ contains
     call clEnqueueReadBufferImpl(command_queue, buffer, blocking_write, offset, cb, c_loc(ptr), errcode_ret)
 
   end subroutine clEnqueueReadBuffer_character
+
+  ! ---------------------------------------
+
+  subroutine clEnqueueFillBuffer_integer1(command_queue, buffer, ptr, offset, cb, errcode_ret)
+    use iso_c_binding, only: c_loc, c_sizeof
+    type(cl_command_queue), intent(inout) :: command_queue
+    type(cl_mem),           intent(in)    :: buffer
+    integer(1), target,     intent(out)   :: ptr
+    integer(8),             intent(in)    :: offset
+    integer(8),             intent(in)    :: cb
+    integer,                intent(out)   :: errcode_ret
+
+    call clEnqueueFillBufferImpl(command_queue, buffer, c_loc(ptr), c_sizeof(ptr), offset, cb, errcode_ret)
+
+  end subroutine clEnqueueFillBuffer_integer1
+
+  ! ---------------------------------------
+
+  subroutine clEnqueueFillBuffer_integer2(command_queue, buffer, ptr, offset, cb, errcode_ret)
+    use iso_c_binding, only: c_loc, c_sizeof
+    type(cl_command_queue), intent(inout) :: command_queue
+    type(cl_mem),           intent(in)    :: buffer
+    integer(2), target,     intent(out)   :: ptr
+    integer(8),             intent(in)    :: offset
+    integer(8),             intent(in)    :: cb
+    integer,                intent(out)   :: errcode_ret
+
+    call clEnqueueFillBufferImpl(command_queue, buffer, c_loc(ptr), c_sizeof(ptr), offset, cb, errcode_ret)
+
+  end subroutine clEnqueueFillBuffer_integer2
 
   ! ---------------------------------------
 
